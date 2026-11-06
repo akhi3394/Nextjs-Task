@@ -36,7 +36,14 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 
+## FD calculator formula
 
-Formula: \(M = P + (\frac{P \times r \times t}{100})\)M: Maturity AmountP: Principal (deposit amount)r: Annual interest rate (in percentage)t: Tenure in years (or days/365 
+\[
+M = P + \frac{P \times r \times t}{100}
+\]
 
+- **M** — Maturity amount  
+- **P** — Principal (deposit amount)  
+- **r** — Annual interest rate (as a percentage, e.g. 7.5 for 7.5%)  
+- **t** — Tenure in years (or use days ÷ 365 for fractional years)
 

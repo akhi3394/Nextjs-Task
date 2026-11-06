@@ -19,24 +19,13 @@ export default function Home() {
       maximumFractionDigits: 0,
     }).format(value);
 
+  // Simple interest per README: M = P + (P × r × t / 100)
+  // Same total interest and maturity for all payout frequencies (payout only affects how often interest is paid out).
   const handleCalculate = () => {
     const p = principal;
-    const r = rate / 100;
+    const r = rate;
     const t = tenureYears;
-
-    if (payout === "maturity") {
-      // Cumulative FD: interest compounds quarterly (common for Indian bank FDs)
-      const n = 4;
-      const maturity = p * Math.pow(1 + r / n, n * t);
-      const interest = maturity - p;
-      setInterestEarned(interest);
-      setMaturityAmount(maturity);
-      return;
-    }
-
-    // Non-cumulative (monthly / quarterly / half-yearly): simple interest on principal;
-    // total interest over tenure does not compound into the deposit.
-    const interest = p * r * t;
+    const interest = (p * r * t) / 100;
     const maturity = p + interest;
     setInterestEarned(interest);
     setMaturityAmount(maturity);
