@@ -1,6 +1,5 @@
 'use client';
-import Image from "next/image";
-import { use, useMemo, useState } from "react";
+import { useState } from "react";
 
 type PayoutType = "monthly" | "quarterly" | "half-yearly" | "maturity"
 
@@ -21,9 +20,24 @@ export default function Home() {
     }).format(value);
 
   const handleCalculate = () => {
-    const interest = (principal * rate * tenureYears) / 100;
-    const maturity = principal + interest;
+    const p = principal;
+    const r = rate / 100;
+    const t = tenureYears;
 
+    if (payout === "maturity") {
+      // Cumulative FD: interest compounds quarterly (common for Indian bank FDs)
+      const n = 4;
+      const maturity = p * Math.pow(1 + r / n, n * t);
+      const interest = maturity - p;
+      setInterestEarned(interest);
+      setMaturityAmount(maturity);
+      return;
+    }
+
+    // Non-cumulative (monthly / quarterly / half-yearly): simple interest on principal;
+    // total interest over tenure does not compound into the deposit.
+    const interest = p * r * t;
+    const maturity = p + interest;
     setInterestEarned(interest);
     setMaturityAmount(maturity);
   };
