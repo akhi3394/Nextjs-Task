@@ -1,7 +1,14 @@
 'use client';
 import { useState } from "react";
 
-type PayoutType = "monthly" | "quarterly" | "half-yearly" | "maturity"
+type PayoutType = "quarterly" | "half-yearly" | "yearly" | "maturity";
+
+const PAYOUT_OPTIONS: { id: PayoutType; label: string }[] = [
+  { id: "quarterly", label: "Quarterly" },
+  { id: "half-yearly", label: "Half yearly" },
+  { id: "yearly", label: "Yearly" },
+  { id: "maturity", label: "At Maturity" },
+];
 
 export default function Home() {
   const [principal, setPrincipal] = useState<number>(100000);
@@ -19,14 +26,21 @@ export default function Home() {
       maximumFractionDigits: 0,
     }).format(value);
 
-  // Simple interest per README: M = P + (P × r × t / 100)
-  // Same total interest and maturity for all payout frequencies (payout only affects how often interest is paid out).
+  // Compound interest: compounding frequency matches payout (same idea as typical FD demos).
+  // M = P × (1 + r/(100×n))^(n×t), interest = M − P
   const handleCalculate = () => {
     const p = principal;
-    const r = rate;
+    const rPct = rate;
     const t = tenureYears;
-    const interest = (p * r * t) / 100;
-    const maturity = p + interest;
+    const n =
+      payout === "quarterly"
+        ? 4
+        : payout === "half-yearly"
+          ? 2
+          : 1; // "yearly" | "at maturity" — once per year / at end (n = 1)
+    const r = rPct / 100;
+    const maturity = p * Math.pow(1 + r / n, n * t);
+    const interest = maturity - p;
     setInterestEarned(interest);
     setMaturityAmount(maturity);
   };
@@ -77,21 +91,19 @@ export default function Home() {
               <label>Interest Payout</label>
             </div>
             <div style={styles.chipRow}>
-              {(["monthly", "quarterly", "half-yearly", "maturity"] as PayoutType[]).map(
-                (item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setPayout(item)}
-                    style={{
-                      ...styles.chip,
-                      ...(payout === item ? styles.chipActive : {}),
-                    }}
-                  >
-                    {item}
-                  </button>
-                )
-              )}
+              {PAYOUT_OPTIONS.map(({ id, label }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setPayout(id)}
+                  style={{
+                    ...styles.chip,
+                    ...(payout === id ? styles.chipActive : {}),
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 

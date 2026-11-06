@@ -38,12 +38,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## FD calculator formula
 
+Compound interest; compounding frequency **n** matches **Interest Payout**:
+
 \[
-M = P + \frac{P \times r \times t}{100}
+M = P \left(1 + \frac{r}{100 n}\right)^{n t}
 \]
 
 - **M** — Maturity amount  
 - **P** — Principal (deposit amount)  
-- **r** — Annual interest rate (as a percentage, e.g. 7.5 for 7.5%)  
-- **t** — Tenure in years (or use days ÷ 365 for fractional years)
+- **r** — Annual nominal rate (as a percentage, e.g. 7 for 7%)  
+- **t** — Tenure in years  
+- **n** — Compounds per year: **4** quarterly, **2** half-yearly, **1** yearly or at maturity  
+
+Interest earned: \(M - P\).
 
